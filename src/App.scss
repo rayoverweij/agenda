@@ -18,6 +18,20 @@ main {
     height: calc(100vh - 3rem);
 }
 
+#toolCol {
+    padding-left: 10px;
+}
+
+.weekChevron {
+    margin-left: 5px;
+    margin-bottom: 5px;
+
+    &:hover {
+        cursor: pointer;
+        fill: var(--red);
+    }
+}
+
 .daysOfWeek {
     height: 100%;
 }
