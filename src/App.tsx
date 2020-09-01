@@ -1,21 +1,70 @@
 import React, { useState } from 'react';
 import './App.scss';
 import WeekDay from './calendar/WeekDay';
+import { TaskSet } from './types/Task';
+import { Day, DaySet } from './types/Day';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { ArrowLeftCircle, ArrowRightCircle, ArrowDownCircle } from 'react-bootstrap-icons';
 import { format, getWeek, getMonth, getYear, startOfWeek, addDays, addWeeks, subWeeks } from 'date-fns';
 
 
 const App = () => {
-    const [currentDate, setCurrentDate] = useState(new Date());
+    // Test arrays
+    const testTasks = {
+        0: {id: 0, content: "hi"},
+        1: {id: 1, content: "hello"},
+        2: {id: 2, content: "bye"}
+    }
 
+    const testDate = format(new Date(), 'yyyy-MM-dd');
+    const testDays: { [key: string]: Day } = {}
+    testDays[testDate] = { date: testDate, tasks: [0, 1, 2] }
+
+
+    // Initialize local storage
+    if(localStorage.getItem("tasks") === null) {
+        localStorage.setItem("tasks", JSON.stringify(testTasks));
+    }
+
+    if(localStorage.getItem("days") === null) {
+        localStorage.setItem("days", JSON.stringify(testDays));
+    }
+
+
+    // Initialize state
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem("tasks")!) as TaskSet);
+    const [days, setDays] = useState(JSON.parse(localStorage.getItem("days")!) as DaySet);
+
+
+    // Update storage
+    const updateTasks = (newTasks: TaskSet) => {
+        setTasks(newTasks);
+        localStorage.setItem("tasks", JSON.stringify(newTasks));
+    }
+
+    const updateDays = (newDays: DaySet) => {
+        setDays(newDays);
+        localStorage.setItem("days", JSON.stringify(newDays));
+    }
+
+
+    // Information based on current state
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
 
     const weekDays: Date[] = [];
     for(let i = 0; i < 7; i++) {
         weekDays.push(addDays(weekStart, i));
+
+        const currDay = format(weekDays[i], 'yyyy-MM-dd');
+        if(!days.hasOwnProperty(currDay)) {
+            const newDays = {...days};
+            newDays[currDay] = {date: currDay, tasks: []};
+            setDays(newDays);
+        }
     }
 
     const thisMonth = () => {
@@ -32,19 +81,37 @@ const App = () => {
         }
     }
 
-    const prevWeek = () => {
-        setCurrentDate(subWeeks(currentDate, 1));
+
+    // Calendar navigation
+    const prevWeek = () => { setCurrentDate(subWeeks(currentDate, 1)); }
+    const nextWeek = () => { setCurrentDate(addWeeks(currentDate, 1)); }
+    const today = () => { setCurrentDate(new Date()); }
+
+
+    // Drag and drop tasks
+    const onDragEnd = (result: DropResult) => {
+        const { destination, source, draggableId } = result;
+
+        if(!destination) return;
+
+        if(destination.droppableId === source.droppableId && destination.index === source.index) {
+            return;
+        }
+
+        const day = days[source.droppableId]!;
+        const newTaskList = [...day.tasks];
+        newTaskList.splice(source.index, 1);
+        newTaskList.splice(destination.index, 0, Number(draggableId));
+
+        const newDay = {...day, tasks: newTaskList};
+        
+        const newDays = {...days};
+        newDays[source.droppableId] = newDay;
+        updateDays(newDays);
     }
 
-    const nextWeek = () => {
-        setCurrentDate(addWeeks(currentDate, 1));
-    }
 
-    const today = () => {
-        setCurrentDate(new Date());
-    }
-
-
+    // Render
     return (
         <Container fluid>
             <header>
@@ -57,18 +124,23 @@ const App = () => {
             </header>
             <main>
                 <Row className="daysOfWeek">
-                    <Col id="toolCol">
-                        <ArrowLeftCircle className="weekChevron" onClick={prevWeek} />
-                        <ArrowDownCircle className="weekChevron" onClick={today} />
-                        <ArrowRightCircle className="weekChevron" onClick={nextWeek} />
-                    </Col>
-                    {
-                        weekDays.map((weekDay, index) => {
-                            return (
-                                <WeekDay date={weekDay} key={`weekDay-${index}`} />
-                            )
-                        })
-                    }
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <Col id="toolCol">
+                            <ArrowLeftCircle className="weekChevron" onClick={prevWeek} />
+                            <ArrowDownCircle className="weekChevron" onClick={today} />
+                            <ArrowRightCircle className="weekChevron" onClick={nextWeek} />
+                        </Col>
+                        {
+                            weekDays.map((weekDay, index) => {
+                                const weekDayString = format(weekDay, 'yyyy-MM-dd');
+                                const day = days[weekDayString];
+
+                                return (
+                                    <WeekDay day={day} tasks={tasks} key={`weekDay-${index}`} />
+                                )
+                            })
+                        }
+                    </DragDropContext>
                 </Row>
             </main>
         </Container>
