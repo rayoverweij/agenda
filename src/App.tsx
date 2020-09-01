@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { ArrowLeftCircle, ArrowRightCircle, ArrowDownCircle } from 'react-bootstrap-icons';
-import { format, getWeek, startOfWeek, addDays, addWeeks, subWeeks } from 'date-fns';
+import { format, getWeek, getMonth, getYear, startOfWeek, addDays, addWeeks, subWeeks } from 'date-fns';
 
 
 const App = () => {
@@ -16,6 +16,20 @@ const App = () => {
     const weekDays: Date[] = [];
     for(let i = 0; i < 7; i++) {
         weekDays.push(addDays(weekStart, i));
+    }
+
+    const thisMonth = () => {
+        const startMonth = getMonth(weekDays[0]);
+        const endMonth = getMonth(weekDays[6]);
+
+        if(startMonth === 11 && endMonth === 0) {
+            const lastYear = getYear(weekDays[0]);
+            return `${format(weekDays[0], 'MMM')} ${lastYear} - ${format(weekDays[6], 'MMM Y')}`;
+        } else if(startMonth !== endMonth) {
+            return `${format(weekDays[0], 'MMM')} - ${format(weekDays[6], 'MMM Y')}`;
+        } else {
+            return format(weekDays[0], 'MMMM Y');
+        }
     }
 
     const prevWeek = () => {
@@ -37,7 +51,7 @@ const App = () => {
                 <Row>
                     <Col>
                         <h1>Agenda</h1>
-                        <span className="weekNumber">Week {getWeek(currentDate)}, {format(currentDate, 'MMMM Y')}</span>
+                        <span className="weekNumber">Week {getWeek(currentDate)}, {thisMonth()}</span>
                     </Col>
                 </Row>
             </header>
