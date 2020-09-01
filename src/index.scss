@@ -3,10 +3,17 @@
 // General styling
 body {
     font-family: 'Inter', sans-serif;
+    font-feature-settings: 'ss01';
 }
 
 @supports (font-variation-settings: normal) {
     body {
         font-family: 'Inter var', sans-serif;
     }
+}
+
+
+h1 {
+    font-weight: 900;
+    text-transform: uppercase;
 }
