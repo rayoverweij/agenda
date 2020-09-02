@@ -15,10 +15,14 @@ const DayItem = ({task, index}: DayItemProps) => {
             {(provided, snapshot) => 
                 <div
                     {...provided.draggableProps}
-                    {...provided.dragHandleProps}
                     ref={provided.innerRef}
                     className={`dragContainer ${snapshot.isDragging ? "isDragging" : ""}`}
                 >
+                    <div
+                        {...provided.dragHandleProps}
+                        className="dragHandle"
+                    >
+                    </div>
                     {task.content}
                 </div>
             }
