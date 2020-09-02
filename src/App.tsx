@@ -51,6 +51,12 @@ const App = () => {
         localStorage.setItem("days", JSON.stringify(newDays));
     }
 
+    const updateDay = (newDay: Day) => {
+        const newDays = {...days};
+        newDays[newDay.date] = newDay;
+        updateDays(newDays);
+    }
+
 
     // Information based on current state
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
@@ -107,26 +113,23 @@ const App = () => {
             newTaskList.splice(destination.index, 0, Number(draggableId));
 
             const newDay = {...finish, tasks: newTaskList};
-
+            updateDay(newDay);
+            
+        } else {
+            const newStartTaskList = [...start.tasks];
+            newStartTaskList.splice(source.index, 1);
+            const newStart = {...start, tasks: newStartTaskList};
+    
+            const newFinishTaskList = [...finish.tasks];
+            newFinishTaskList.splice(destination.index, 0, Number(draggableId));
+            const newFinish = {...finish, tasks: newFinishTaskList};
+    
             const newDays = {...days};
-            newDays[newDay.date] = newDay;
-
+            newDays[newStart.date] = newStart;
+            newDays[newFinish.date] = newFinish;
+            
             updateDays(newDays);
-            return;
         }
-
-        const newStartTaskList = [...start.tasks];
-        newStartTaskList.splice(source.index, 1);
-        const newStart = {...start, tasks: newStartTaskList};
-
-        const newFinishTaskList = [...finish.tasks];
-        newFinishTaskList.splice(destination.index, 0, Number(draggableId));
-        const newFinish = {...finish, tasks: newFinishTaskList};
-
-        const newDays = {...days};
-        newDays[newStart.date] = newStart;
-        newDays[newFinish.date] = newFinish;
-        updateDays(newDays);
     }
 
 
@@ -155,7 +158,13 @@ const App = () => {
                                 const day = days[weekDayString];
 
                                 return (
-                                    <WeekDay day={day} tasks={tasks} key={`weekDay-${index}`} />
+                                    <WeekDay
+                                        key={`weekDay-${index}`}
+                                        day={day}
+                                        tasks={tasks}
+                                        updateTasks={updateTasks}
+                                        updateDay={updateDay}
+                                    />
                                 )
                             })
                         }

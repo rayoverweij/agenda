@@ -7,7 +7,9 @@
 }
 
 .dropContainer {
+    min-height: 50%;
+
     &.isDraggingOver {
-        background-color: lightgray;
+        background-color: #F7F7F7;
     }
 }

@@ -17,3 +17,22 @@ h1 {
     font-weight: 900;
     text-transform: uppercase;
 }
+
+
+.editText {
+    resize: none;
+    border: 1px solid transparent;
+    background-color: transparent;
+    padding: 5px;
+    border-radius: 4px;
+
+    &:hover {
+        border-color: black;
+        cursor: pointer;
+    }
+
+    &:focus {
+        outline: none;
+        cursor: text;
+    }
+}

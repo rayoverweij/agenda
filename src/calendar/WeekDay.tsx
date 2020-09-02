@@ -1,8 +1,9 @@
 import React from 'react';
 import './WeekDay.scss';
 import DayItem from './DayItem';
+import EditText from './EditText';
 import { Day } from '../types/Day';
-import { Task } from '../types/Task';
+import { Task, TaskSet } from '../types/Task';
 import Col from 'react-bootstrap/Col';
 import { Droppable } from 'react-beautiful-dnd';
 import { format, isToday } from 'date-fns';
@@ -10,12 +11,25 @@ import { format, isToday } from 'date-fns';
 
 type WeekDayProps = {
     day: Day,
-    tasks: { [key: number]: Task }
+    tasks: { [key: number]: Task },
+    updateTasks: (newTasks: TaskSet) => void,
+    updateDay: (newDay: Day) => void
 }
 
-const WeekDay = ({day, tasks}: WeekDayProps) => {
+const WeekDay = ({day, tasks, updateTasks, updateDay}: WeekDayProps) => {
     const todaysDate = new Date(day.date);
     const todaysTasks = day.tasks.map(taskId => tasks[taskId]);
+
+    const addTask = (value: string) => {
+        const taskCounter = Object.keys(tasks).length;
+        const newTasks = {...tasks}
+        newTasks[taskCounter] = { id: taskCounter, content: value };
+        updateTasks(newTasks);
+
+        const newDay = {...day};
+        newDay.tasks.push(taskCounter);
+        updateDay(newDay);
+    }
 
     return (
         <Col className="weekDay">
@@ -35,6 +49,7 @@ const WeekDay = ({day, tasks}: WeekDayProps) => {
                             );
                         })}
                         {provided.placeholder}
+                        <EditText name="addTask" fn={addTask} />
                     </div>
                 }
             </Droppable>
