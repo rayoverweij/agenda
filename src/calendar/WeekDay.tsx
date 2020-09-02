@@ -23,8 +23,12 @@ const WeekDay = ({day, tasks}: WeekDayProps) => {
                 {format(todaysDate, 'iiii d')}
             </p>
             <Droppable droppableId={format(todaysDate, 'yyyy-MM-dd')}>
-                {(provided) => 
-                    <div ref={provided.innerRef} {...provided.droppableProps}>
+                {(provided, snapshot) => 
+                    <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        className={`dropContainer ${snapshot.isDraggingOver ? "isDraggingOver" : ""}`}
+                    >
                         {todaysTasks.map((task, index) => {
                             return (
                                 <DayItem key={`task-${task.id}`} task={task} index={index} />

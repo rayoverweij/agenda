@@ -1,4 +1,5 @@
 import React from 'react';
+import './DayItem.scss';
 import { Draggable } from 'react-beautiful-dnd';
 import { Task } from '../types/Task';
 
@@ -11,8 +12,13 @@ type DayItemProps = {
 const DayItem = ({task, index}: DayItemProps) => {
     return (
         <Draggable draggableId={task.id.toString()} index={index}>
-            {(provided) => 
-                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+            {(provided, snapshot) => 
+                <div
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    ref={provided.innerRef}
+                    className={`dragContainer ${snapshot.isDragging ? "isDragging" : ""}`}
+                >
                     {task.content}
                 </div>
             }

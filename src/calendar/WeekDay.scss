@@ -5,3 +5,9 @@
 .today {
     font-weight: bold;
 }
+
+.dropContainer {
+    &.isDraggingOver {
+        background-color: lightgray;
+    }
+}
