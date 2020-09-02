@@ -98,15 +98,34 @@ const App = () => {
             return;
         }
 
-        const day = days[source.droppableId]!;
-        const newTaskList = [...day.tasks];
-        newTaskList.splice(source.index, 1);
-        newTaskList.splice(destination.index, 0, Number(draggableId));
+        const start = days[source.droppableId]!;
+        const finish = days[destination.droppableId]!;
 
-        const newDay = {...day, tasks: newTaskList};
-        
+        if(start === finish) {
+            const newTaskList = [...start.tasks];
+            newTaskList.splice(source.index, 1);
+            newTaskList.splice(destination.index, 0, Number(draggableId));
+
+            const newDay = {...finish, tasks: newTaskList};
+
+            const newDays = {...days};
+            newDays[newDay.date] = newDay;
+
+            updateDays(newDays);
+            return;
+        }
+
+        const newStartTaskList = [...start.tasks];
+        newStartTaskList.splice(source.index, 1);
+        const newStart = {...start, tasks: newStartTaskList};
+
+        const newFinishTaskList = [...finish.tasks];
+        newFinishTaskList.splice(destination.index, 0, Number(draggableId));
+        const newFinish = {...finish, tasks: newFinishTaskList};
+
         const newDays = {...days};
-        newDays[source.droppableId] = newDay;
+        newDays[newStart.date] = newStart;
+        newDays[newFinish.date] = newFinish;
         updateDays(newDays);
     }
 
