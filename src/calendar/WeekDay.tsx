@@ -49,7 +49,11 @@ const WeekDay = ({day, tasks, updateTasks, updateDay}: WeekDayProps) => {
                             );
                         })}
                         {provided.placeholder}
-                        <EditText name="addTask" fn={addTask} />
+                        <EditText
+                            name="addTask"
+                            placeholder="Add task..."
+                            fn={addTask}
+                        />
                     </div>
                 }
             </Droppable>

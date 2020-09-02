@@ -20,11 +20,12 @@ h1 {
 
 
 .editText {
+    max-width: 100%;
     resize: none;
-    border: 1px solid transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    border-radius: 0;
     background-color: transparent;
-    padding: 5px;
-    border-radius: 4px;
 
     &:hover {
         border-color: black;
@@ -33,6 +34,7 @@ h1 {
 
     &:focus {
         outline: none;
+        border-color: black;
         cursor: text;
     }
 }

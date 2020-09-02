@@ -1,4 +1,7 @@
 .weekDay {
+    max-width: 12.5%;
+    display: flex;
+    flex-direction: column;
     border-left: 1px solid black;
 }
 
@@ -7,9 +10,24 @@
 }
 
 .dropContainer {
-    min-height: 50%;
+    flex-grow: 1;
+    margin-bottom: 15px;
+    overflow: hidden;
+    font-size: 0.8rem;
 
     &.isDraggingOver {
         background-color: #F7F7F7;
+    }
+
+    .editText {
+        display: none;
+
+        &:focus {
+            display: block;
+        }
+    }
+
+    &:hover .editText {
+        display: block;
     }
 }
