@@ -10,24 +10,37 @@ import { format, isToday } from 'date-fns';
 
 
 type WeekDayProps = {
-    day: Day,
     tasks: { [key: number]: Task },
+    taskCounter: number,
+    day: Day,
     updateTasks: (newTasks: TaskSet) => void,
+    updateTaskCounter: (newCounter: number) => void,
     updateDay: (newDay: Day) => void
 }
 
-const WeekDay = ({day, tasks, updateTasks, updateDay}: WeekDayProps) => {
+const WeekDay = ({tasks, taskCounter, day, updateTasks, updateTaskCounter, updateDay}: WeekDayProps) => {
     const todaysDate = new Date(day.date);
     const todaysTasks = day.tasks.map(taskId => tasks[taskId]);
 
     const addTask = (value: string) => {
-        const taskCounter = Object.keys(tasks).length;
-        const newTasks = {...tasks}
+        const newTasks = {...tasks};
         newTasks[taskCounter] = { id: taskCounter, content: value };
         updateTasks(newTasks);
+        updateTaskCounter(taskCounter + 1);
 
         const newDay = {...day};
         newDay.tasks.push(taskCounter);
+        updateDay(newDay);
+    }
+
+    const deleteTask = (taskId: number) => {
+        const newTasks = {...tasks};
+        delete newTasks[taskId];
+        updateTasks(newTasks);
+
+        const newDay = {...day};
+        const index = newDay.tasks.findIndex(el => el === taskId);
+        newDay.tasks.splice(index, 1);
         updateDay(newDay);
     }
 
@@ -47,7 +60,12 @@ const WeekDay = ({day, tasks, updateTasks, updateDay}: WeekDayProps) => {
                     >
                         {todaysTasks.map((task, index) => {
                             return (
-                                <DayItem key={`task-${task.id}`} task={task} index={index} />
+                                <DayItem
+                                    key={`task-${task.id}`}
+                                    task={task}
+                                    index={index}
+                                    deleteTask={deleteTask}
+                                />
                             );
                         })}
                         {provided.placeholder}

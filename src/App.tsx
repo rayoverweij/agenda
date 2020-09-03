@@ -12,31 +12,24 @@ import { format, getWeek, getMonth, getYear, startOfWeek, addDays, addWeeks, sub
 
 
 const App = () => {
-    // Test arrays
-    const testTasks = {
-        0: {id: 0, content: "hi"},
-        1: {id: 1, content: "hello"},
-        2: {id: 2, content: "bye"}
-    }
-
-    const testDate = format(new Date(), 'yyyy-MM-dd');
-    const testDays: { [key: string]: Day } = {}
-    testDays[testDate] = { date: testDate, tasks: [0, 1, 2] }
-
-
     // Initialize local storage
     if(localStorage.getItem("tasks") === null) {
-        localStorage.setItem("tasks", JSON.stringify(testTasks));
+        localStorage.setItem("tasks", JSON.stringify({}));
+    }
+
+    if(localStorage.getItem("taskCounter") === null) {
+        localStorage.setItem("taskCounter", JSON.stringify(0));
     }
 
     if(localStorage.getItem("days") === null) {
-        localStorage.setItem("days", JSON.stringify(testDays));
+        localStorage.setItem("days", JSON.stringify({}));
     }
 
 
     // Initialize state
     const [currentDate, setCurrentDate] = useState(new Date());
     const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem("tasks")!) as TaskSet);
+    const [taskCounter, setTaskCounter] = useState(JSON.parse(localStorage.getItem("taskCounter")!));
     const [days, setDays] = useState(JSON.parse(localStorage.getItem("days")!) as DaySet);
 
 
@@ -44,6 +37,11 @@ const App = () => {
     const updateTasks = (newTasks: TaskSet) => {
         setTasks(newTasks);
         localStorage.setItem("tasks", JSON.stringify(newTasks));
+    }
+
+    const updateTaskCounter = (newCounter: number) => {
+        setTaskCounter(newCounter);
+        localStorage.setItem("taskCounter", JSON.stringify(newCounter));
     }
 
     const updateDays = (newDays: DaySet) => {
@@ -162,9 +160,11 @@ const App = () => {
                                 return (
                                     <WeekDay
                                         key={`weekDay-${index}`}
-                                        day={day}
                                         tasks={tasks}
+                                        taskCounter={taskCounter}
+                                        day={day}
                                         updateTasks={updateTasks}
+                                        updateTaskCounter={updateTaskCounter}
                                         updateDay={updateDay}
                                     />
                                 )

@@ -8,10 +8,11 @@ import { GripHorizontal, ThreeDots, Trash2, Option } from 'react-bootstrap-icons
 
 type DayItemProps = {
     task: Task,
-    index: number
+    index: number,
+    deleteTask: (id: number) => void
 }
 
-const DayItem = ({task, index}: DayItemProps) => {
+const DayItem = ({task, index, deleteTask}: DayItemProps) => {
     const [selected, setSelected] = useState(false);
 
     const onDropdownToggle = (isOpen: boolean) => {
@@ -47,9 +48,15 @@ const DayItem = ({task, index}: DayItemProps) => {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu className="taskDropdownMenu">
-                                <Dropdown.Item><Trash2 />&nbsp;&nbsp;Delete</Dropdown.Item>
-                                <Dropdown.Item><Option />&nbsp;&nbsp;Option 2</Dropdown.Item>
-                                <Dropdown.Item><Option />&nbsp;&nbsp;Option 3</Dropdown.Item>
+                                <Dropdown.Item onClick={() => {deleteTask(task.id)}}>
+                                    <Trash2 />&nbsp;&nbsp;Delete
+                                </Dropdown.Item>
+                                <Dropdown.Item>
+                                    <Option />&nbsp;&nbsp;Option 2
+                                </Dropdown.Item>
+                                <Dropdown.Item>
+                                    <Option />&nbsp;&nbsp;Option 3
+                                </Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
