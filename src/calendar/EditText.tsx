@@ -40,7 +40,6 @@ const EditText = ({name, type, start, placeholder, fn}: EditTextProps) => {
         <TextareaAutosize
             className="editText"
             name={name}
-            cols={value.length > 8 ? value.length : 8}
             value={value}
             autoComplete="off"
             spellCheck={false}

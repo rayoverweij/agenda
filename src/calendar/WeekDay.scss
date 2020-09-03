@@ -32,7 +32,7 @@
         margin-right: 15px;
         display: none;
 
-        &:focus {
+        &:focus-within {
             display: block;
         }
     }
