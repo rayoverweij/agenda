@@ -23,7 +23,6 @@ const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
     }
 
     const editTask = (value: string) => {
-        if(value === "") deleteTask(task.id);
         const newTask = {...task};
         newTask.content = value;
         updateTask(newTask);
