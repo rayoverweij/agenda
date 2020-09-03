@@ -1,17 +1,16 @@
 .dragContainer {
     display: flex;
-    padding-right: 15px;
 
     .dragHandle {
+        width: 15px;
         visibility: hidden;
         color: var(--gray);
-        margin-left: 2px;
-        margin-right: 2px;
-        margin-bottom: 2px;
 
         svg {
             width: 0.8rem;
             height: 0.8rem;
+            margin-left: 1.6px;
+            margin-bottom: 2px;
         }
 
         &:hover {
@@ -20,15 +19,32 @@
     }
 
     .taskContent {
+        flex-grow: 1;
         overflow: hidden;
         overflow-wrap: break-word;
         word-break: break-word;
     }
 
-    &:hover {
+    .taskMenu {
+        width: 15px;
+        visibility: hidden;
+        
+        svg {
+            width: 0.8rem;
+            height: 0.8rem;
+            color: var(--gray);
+
+            &:hover {
+                color: var(--red);
+                cursor: pointer;
+            }
+        }
+    }
+
+    &:hover, &.selected {
         background-color: #F7F7F7;
 
-        .dragHandle {
+        .dragHandle, .taskMenu {
             visibility: visible;
         }
     }
@@ -37,6 +53,33 @@
         .dragHandle {
             visibility: visible;
             color: var(--red);
+        }
+    }
+}
+
+.taskDropdownToggle {
+    &::after {
+        display: none;
+    }
+}
+
+.taskDropdownMenu {
+    min-width: 5rem;
+    font-size: 0.8rem;
+    padding: 0.25rem 0;
+    visibility: visible;
+
+    .dropdown-item {
+        padding: 0.25rem 0.5rem;
+
+        svg {
+            color: initial;
+        }
+
+        &:active {
+            svg {
+                color: white;
+            }
         }
     }
 }
