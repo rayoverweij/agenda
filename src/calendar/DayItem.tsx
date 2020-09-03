@@ -4,20 +4,28 @@ import { Task } from '../types/Task';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Draggable } from 'react-beautiful-dnd';
 import { GripHorizontal, ThreeDots, Trash2, Option } from 'react-bootstrap-icons';
+import EditText from './EditText';
 
 
 type DayItemProps = {
     task: Task,
     index: number,
+    updateTask: (task: Task) => void,
     deleteTask: (id: number) => void
 }
 
-const DayItem = ({task, index, deleteTask}: DayItemProps) => {
+const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
     const [selected, setSelected] = useState(false);
 
     const onDropdownToggle = (isOpen: boolean) => {
         if(isOpen) setSelected(true);
         else setSelected(false);
+    }
+
+    const editTask = (value: string) => {
+        const newTask = {...task};
+        newTask.content = value;
+        updateTask(newTask);
     }
 
     return (
@@ -39,7 +47,13 @@ const DayItem = ({task, index, deleteTask}: DayItemProps) => {
                         <GripHorizontal />
                     </div>
                     <div className="taskContent">
-                        {task.content}
+                        <EditText
+                            name="editTask"
+                            type="edit"
+                            start={task.content}
+                            placeholder="empty task"
+                            fn={editTask}
+                        />
                     </div>
                     <div className="taskMenu">
                         <Dropdown onToggle={onDropdownToggle}>

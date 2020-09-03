@@ -33,6 +33,12 @@ const WeekDay = ({tasks, taskCounter, day, updateTasks, updateTaskCounter, updat
         updateDay(newDay);
     }
 
+    const updateTask = (task: Task) => {
+        const newTasks = {...tasks};
+        newTasks[task.id] = task;
+        updateTasks(newTasks);
+    }
+
     const deleteTask = (taskId: number) => {
         const newTasks = {...tasks};
         delete newTasks[taskId];
@@ -64,6 +70,7 @@ const WeekDay = ({tasks, taskCounter, day, updateTasks, updateTaskCounter, updat
                                     key={`task-${task.id}`}
                                     task={task}
                                     index={index}
+                                    updateTask={updateTask}
                                     deleteTask={deleteTask}
                                 />
                             );
@@ -72,6 +79,7 @@ const WeekDay = ({tasks, taskCounter, day, updateTasks, updateTaskCounter, updat
                         <div className="addTask">
                             <EditText
                                 name="addTask"
+                                type="add"
                                 placeholder="Add task..."
                                 fn={addTask}
                             />

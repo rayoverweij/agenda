@@ -4,12 +4,14 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 type EditTextProps = {
     name: string,
+    type: "add" | "edit",
+    start?: string,
     placeholder?: string,
     fn: (value: string) => void
 }
 
-const EditText = ({name, placeholder, fn}: EditTextProps) => {
-    const [value, setValue] = useState("");
+const EditText = ({name, type, start, placeholder, fn}: EditTextProps) => {
+    const [value, setValue] = useState(start || "");
 
     const onChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setValue(event.target.value);
@@ -18,10 +20,16 @@ const EditText = ({name, placeholder, fn}: EditTextProps) => {
     const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
         if(event.which === 13) {
             event.preventDefault();
-            if(value === "") return;
+            if(type === "add" && value === "") return;
             fn(value);
-            setValue("");
+            if(type === "add") setValue("");
+            if(type === "edit") (event.target as HTMLTextAreaElement).blur();
         }
+    }
+
+    const onBlur = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        event.preventDefault();
+        fn(value);
     }
 
     return (
@@ -34,6 +42,7 @@ const EditText = ({name, placeholder, fn}: EditTextProps) => {
             placeholder={placeholder}
             onChange={onChange}
             onKeyDown={onKeyDown}
+            onBlur={type === "edit" ? onBlur : undefined}
         />
     );
 }
