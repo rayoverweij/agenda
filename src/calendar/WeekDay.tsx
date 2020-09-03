@@ -33,9 +33,11 @@ const WeekDay = ({day, tasks, updateTasks, updateDay}: WeekDayProps) => {
 
     return (
         <Col className="weekDay">
-            <p className={isToday(todaysDate) ? "today" : ""}>
-                {format(todaysDate, 'iiii d')}
-            </p>
+            <div className="dayName">
+                <p className={isToday(todaysDate) ? "today" : ""}>
+                    {format(todaysDate, 'iiii d')}
+                </p>
+            </div>
             <Droppable droppableId={format(todaysDate, 'yyyy-MM-dd')}>
                 {(provided, snapshot) => 
                     <div
@@ -49,11 +51,13 @@ const WeekDay = ({day, tasks, updateTasks, updateDay}: WeekDayProps) => {
                             );
                         })}
                         {provided.placeholder}
-                        <EditText
-                            name="addTask"
-                            placeholder="Add task..."
-                            fn={addTask}
-                        />
+                        <div className="addTask">
+                            <EditText
+                                name="addTask"
+                                placeholder="Add task..."
+                                fn={addTask}
+                            />
+                        </div>
                     </div>
                 }
             </Droppable>

@@ -3,6 +3,14 @@
     display: flex;
     flex-direction: column;
     border-left: 1px solid black;
+    padding: 0;
+}
+
+.dayName {
+    position: relative;
+    height: 40px;
+    padding: 0 15px;
+    z-index: 10;
 }
 
 .today {
@@ -11,15 +19,17 @@
 
 .dropContainer {
     flex-grow: 1;
-    margin-bottom: 15px;
-    overflow: hidden;
     font-size: 0.8rem;
+    padding-top: 40px;
+    margin-top: -40px;
 
     &.isDraggingOver {
         background-color: #F7F7F7;
     }
 
-    .editText {
+    .addTask {
+        margin-left: 15px;
+        margin-right: 15px;
         display: none;
 
         &:focus {
@@ -27,7 +37,7 @@
         }
     }
 
-    &:hover .editText {
+    &:hover .addTask {
         display: block;
     }
 }

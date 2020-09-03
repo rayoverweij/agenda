@@ -1,7 +1,8 @@
 import React from 'react';
 import './DayItem.scss';
-import { Draggable } from 'react-beautiful-dnd';
 import { Task } from '../types/Task';
+import { Draggable } from 'react-beautiful-dnd';
+import { GripHorizontal } from 'react-bootstrap-icons';
 
 
 type DayItemProps = {
@@ -22,8 +23,11 @@ const DayItem = ({task, index}: DayItemProps) => {
                         {...provided.dragHandleProps}
                         className="dragHandle"
                     >
+                        <GripHorizontal />
                     </div>
-                    {task.content}
+                    <div className="taskContent">
+                        {task.content}
+                    </div>
                 </div>
             }
         </Draggable>

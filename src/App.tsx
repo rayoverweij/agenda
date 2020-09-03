@@ -148,9 +148,11 @@ const App = () => {
                 <Row className="daysOfWeek">
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Col id="toolCol">
-                            <ArrowLeftCircle className="weekChevron" onClick={prevWeek} />
-                            <ArrowDownCircle className="weekChevron" onClick={today} />
-                            <ArrowRightCircle className="weekChevron" onClick={nextWeek} />
+                            <div className="weekNav">
+                                <ArrowLeftCircle className="weekChevron" onClick={prevWeek} />
+                                <ArrowDownCircle className="weekChevron" onClick={today} />
+                                <ArrowRightCircle className="weekChevron" onClick={nextWeek} />
+                            </div>
                         </Col>
                         {
                             weekDays.map((weekDay, index) => {

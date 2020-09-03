@@ -1,15 +1,42 @@
 .dragContainer {
-    &.isDragging {
-        color: var(--red);
-    }
-}
+    display: flex;
+    padding-right: 15px;
 
-.dragHandle {
-    display: inline-block;
-    width: 4px;
-    height: 4px;
-    background-color: black;
-    border-radius: 5px;
-    margin-right: 5px;
-    margin-bottom: 3px;
+    .dragHandle {
+        visibility: hidden;
+        color: var(--gray);
+        margin-left: 2px;
+        margin-right: 2px;
+        margin-bottom: 2px;
+
+        svg {
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+
+        &:hover {
+            color: var(--red);
+        }
+    }
+
+    .taskContent {
+        overflow: hidden;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    &:hover {
+        background-color: #F7F7F7;
+
+        .dragHandle {
+            visibility: visible;
+        }
+    }
+
+    &.isDragging {
+        .dragHandle {
+            visibility: visible;
+            color: var(--red);
+        }
+    }
 }
