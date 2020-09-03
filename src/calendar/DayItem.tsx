@@ -28,6 +28,10 @@ const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
         updateTask(newTask);
     }
 
+    const deleteThisTask = () => {
+        deleteTask(task.id);
+    }
+
     return (
         <Draggable draggableId={task.id.toString()} index={index}>
             {(provided, snapshot) => 
@@ -47,7 +51,8 @@ const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
                             name="editTask"
                             type="edit"
                             start={task.content}
-                            fn={editTask}
+                            handleSubmit={editTask}
+                            handleDelete={deleteThisTask}
                         />
                     </div>
                     <div className="taskMenu">
@@ -57,7 +62,7 @@ const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu className="taskDropdownMenu">
-                                <Dropdown.Item onClick={() => {deleteTask(task.id)}}>
+                                <Dropdown.Item onClick={deleteThisTask}>
                                     <Trash2 />&nbsp;&nbsp;Delete
                                 </Dropdown.Item>
                                 <Dropdown.Item>

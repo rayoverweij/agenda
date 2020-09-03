@@ -81,7 +81,7 @@ const WeekDay = ({tasks, taskCounter, day, updateTasks, updateTaskCounter, updat
                                 name="addTask"
                                 type="add"
                                 placeholder="Add task..."
-                                fn={addTask}
+                                handleSubmit={addTask}
                             />
                         </div>
                     </div>

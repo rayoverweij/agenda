@@ -7,14 +7,15 @@ type EditTextProps = {
     type: "add" | "edit",
     start?: string,
     placeholder?: string,
-    fn: (value: string) => void
+    handleSubmit: (value: string) => void,
+    handleDelete?: () => void
 }
 
-const EditText = ({name, type, start, placeholder, fn}: EditTextProps) => {
+const EditText = ({name, type, start, placeholder, handleSubmit, handleDelete}: EditTextProps) => {
     const [value, setValue] = useState(start || "");
 
     const submit = () => {
-        fn(value);
+        handleSubmit(value);
         if(type === "add") setValue("");
     }
 
@@ -23,10 +24,21 @@ const EditText = ({name, type, start, placeholder, fn}: EditTextProps) => {
     }
 
     const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-        if(event.which === 13) {
-            event.preventDefault();
-            submit();
-            if(type === "edit") (event.target as HTMLTextAreaElement).blur();
+        switch(event.which) {
+            case 8:
+                if (value === "" && handleDelete !== undefined) {
+                    handleDelete();
+                }
+                break;
+            case 13:
+                if(!event.shiftKey) {
+                    event.preventDefault();
+                    submit();
+                    if(type === "edit") (event.target as HTMLTextAreaElement).blur();
+                }
+                break;
+            default:
+                break;
         }
     }
 
