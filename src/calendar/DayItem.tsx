@@ -34,11 +34,7 @@ const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
                 <div
                     {...provided.draggableProps}
                     ref={provided.innerRef}
-                    className={`
-                        dragContainer
-                        ${snapshot.isDragging ? "isDragging" : ""}
-                        ${selected ? "selected" : ""}
-                    `}
+                    className={`dragContainer ${snapshot.isDragging ? "isDragging" : ""} ${selected ? "selected" : ""}`}
                 >
                     <div
                         {...provided.dragHandleProps}

@@ -13,6 +13,12 @@ type EditTextProps = {
 const EditText = ({name, type, start, placeholder, fn}: EditTextProps) => {
     const [value, setValue] = useState(start || "");
 
+    const submit = () => {
+        if(type === "add" && value === "") return;
+        fn(value);
+        if(type === "add") setValue("");
+    }
+
     const onChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setValue(event.target.value);
     }
@@ -20,16 +26,14 @@ const EditText = ({name, type, start, placeholder, fn}: EditTextProps) => {
     const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
         if(event.which === 13) {
             event.preventDefault();
-            if(type === "add" && value === "") return;
-            fn(value);
-            if(type === "add") setValue("");
+            submit();
             if(type === "edit") (event.target as HTMLTextAreaElement).blur();
         }
     }
 
     const onBlur = (event: ChangeEvent<HTMLTextAreaElement>) => {
         event.preventDefault();
-        fn(value);
+        submit();
     }
 
     return (
@@ -39,10 +43,11 @@ const EditText = ({name, type, start, placeholder, fn}: EditTextProps) => {
             cols={value.length > 8 ? value.length : 8}
             value={value}
             autoComplete="off"
+            spellCheck={false}
             placeholder={placeholder}
             onChange={onChange}
             onKeyDown={onKeyDown}
-            onBlur={type === "edit" ? onBlur : undefined}
+            onBlur={onBlur}
         />
     );
 }

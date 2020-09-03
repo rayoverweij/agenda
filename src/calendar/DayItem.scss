@@ -19,6 +19,7 @@
     }
 
     .taskContent {
+        margin-bottom: -4px;
         flex-grow: 1;
         overflow: hidden;
         overflow-wrap: break-word;
@@ -41,7 +42,7 @@
         }
     }
 
-    &:hover, &.selected {
+    &:hover, &:focus-within, &.selected {
         background-color: #F7F7F7;
 
         .dragHandle, .taskMenu {
@@ -74,6 +75,12 @@
 
         svg {
             color: initial;
+        }
+
+        &:hover {
+            svg {
+                color: var(--red);
+            }
         }
 
         &:active {
