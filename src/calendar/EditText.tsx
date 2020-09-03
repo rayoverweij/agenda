@@ -14,7 +14,6 @@ const EditText = ({name, type, start, placeholder, fn}: EditTextProps) => {
     const [value, setValue] = useState(start || "");
 
     const submit = () => {
-        if(type === "add" && value === "") return;
         fn(value);
         if(type === "add") setValue("");
     }
