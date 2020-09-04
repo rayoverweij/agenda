@@ -2,7 +2,8 @@ import { RawDraftContentState } from "draft-js"
 
 export type Task = {
     id: number,
-    content: RawDraftContentState
+    content: RawDraftContentState,
+    highlight: boolean
 }
 
 export type TaskSet = {

@@ -4,7 +4,7 @@ import EditText from './EditText';
 import { Task } from '../types/Task';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Draggable } from 'react-beautiful-dnd';
-import { GripHorizontal, ThreeDots, Trash2, Option } from 'react-bootstrap-icons';
+import { GripHorizontal, ThreeDots, Trash2, Star } from 'react-bootstrap-icons';
 import { RawDraftContentState } from 'draft-js';
 
 
@@ -29,6 +29,12 @@ const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
         updateTask(newTask);
     }
 
+    const toggleHighlight = () => {
+        const newTask = {...task};
+        newTask.highlight ? newTask.highlight = false : newTask.highlight = true;
+        updateTask(newTask);
+    }
+
     const deleteThisTask = () => {
         deleteTask(task.id);
     }
@@ -39,7 +45,12 @@ const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
                 <div
                     {...provided.draggableProps}
                     ref={provided.innerRef}
-                    className={`dragContainer ${snapshot.isDragging ? "isDragging" : ""} ${selected ? "selected" : ""}`}
+                    className={`
+                        dragContainer
+                        ${snapshot.isDragging ? "isDragging" : ""}
+                        ${selected ? "selected" : ""}
+                        ${task.highlight ? "highlight" : ""}
+                    `}
                 >
                     <div
                         {...provided.dragHandleProps}
@@ -65,11 +76,8 @@ const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
                                 <Dropdown.Item onClick={deleteThisTask}>
                                     <Trash2 />&nbsp;&nbsp;Delete
                                 </Dropdown.Item>
-                                <Dropdown.Item>
-                                    <Option />&nbsp;&nbsp;Option 2
-                                </Dropdown.Item>
-                                <Dropdown.Item>
-                                    <Option />&nbsp;&nbsp;Option 3
+                                <Dropdown.Item onClick={toggleHighlight}>
+                                    <Star />&nbsp;&nbsp;Highlight
                                 </Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>

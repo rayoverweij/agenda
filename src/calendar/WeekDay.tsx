@@ -25,7 +25,7 @@ const WeekDay = ({tasks, taskCounter, day, updateTasks, updateTaskCounter, updat
 
     const addTask = (value: RawDraftContentState) => {
         const newTasks = {...tasks};
-        newTasks[taskCounter] = { id: taskCounter, content: value };
+        newTasks[taskCounter] = { id: taskCounter, content: value, highlight: false };
         updateTasks(newTasks);
         updateTaskCounter(taskCounter + 1);
 
