@@ -1,64 +1,85 @@
-import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
+import React, { useState, FocusEvent, KeyboardEvent } from 'react';
+import { Editor, EditorState, RawDraftContentState, RichUtils, getDefaultKeyBinding, convertToRaw, convertFromRaw } from 'draft-js';
+import 'draft-js/dist/Draft.css';
 
 
 type EditTextProps = {
-    name: string,
     type: "add" | "edit",
-    start?: string,
+    start?: RawDraftContentState,
     placeholder?: string,
-    handleSubmit: (value: string) => void,
+    handleSubmit: (value: RawDraftContentState) => void,
     handleDelete?: () => void
 }
 
-const EditText = ({name, type, start, placeholder, handleSubmit, handleDelete}: EditTextProps) => {
-    const [value, setValue] = useState(start || "");
+const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTextProps) => {
+    const [editorState, setEditorState] = useState(
+        start === undefined ? () => EditorState.createEmpty() : () => EditorState.createWithContent(convertFromRaw(start)),
+    )
 
     const submit = () => {
-        handleSubmit(value);
-        if(type === "add") setValue("");
+        handleSubmit(convertToRaw(editorState.getCurrentContent()));
+        if(type === "add") setEditorState(EditorState.createEmpty());
     }
 
-    const onChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        setValue(event.target.value);
-    }
-
-    const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    const customKeyBindingFn = (event: KeyboardEvent) => {
         switch(event.which) {
             case 8:
-                if (value === "" && handleDelete !== undefined) {
-                    handleDelete();
+                if(!editorState.getCurrentContent().hasText() && handleDelete !== undefined) {
+                    return 'delete-item';
+                } else {
+                    return getDefaultKeyBinding(event);
                 }
-                break;
             case 13:
                 if(!event.shiftKey) {
                     event.preventDefault();
-                    submit();
-                    if(type === "edit") (event.target as HTMLTextAreaElement).blur();
+                    return 'submit-item';
                 }
-                break;
             default:
-                break;
+                return getDefaultKeyBinding(event);
         }
     }
 
-    const onBlur = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const handleKeyCommand = (command: string, editorState: EditorState) => {
+        if(command === "delete-item") {
+            handleDelete!();
+            return 'handled';
+        }
+        
+        if(command === "submit-item") {
+            submit();
+            if(type === "edit") (document.activeElement! as HTMLDivElement).blur();
+            return 'handled';
+        }
+
+        const newState = RichUtils.handleKeyCommand(editorState, command);
+
+        if(newState) {
+            setEditorState(newState);
+            return 'handled';
+        }
+
+        return 'not-handled';
+    }
+
+    const onBlur = (event: FocusEvent) => {
         event.preventDefault();
+        if(type === "add" && !editorState.getCurrentContent().hasText()) return;
         submit();
     }
 
     return (
-        <TextareaAutosize
-            className="editText"
-            name={name}
-            value={value}
-            autoComplete="off"
-            spellCheck={false}
-            placeholder={placeholder}
-            onChange={onChange}
-            onKeyDown={onKeyDown}
-            onBlur={onBlur}
-        />
+        <div className="editText">
+            <Editor
+                editorState={editorState}
+                autoComplete="off"
+                spellCheck={false}
+                placeholder={placeholder}
+                onChange={setEditorState}
+                handleKeyCommand={handleKeyCommand}
+                keyBindingFn={customKeyBindingFn}
+                onBlur={onBlur}
+            />
+        </div>
     );
 }
 

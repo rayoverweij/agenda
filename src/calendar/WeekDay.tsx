@@ -7,6 +7,7 @@ import { Task, TaskSet } from '../types/Task';
 import Col from 'react-bootstrap/Col';
 import { Droppable } from 'react-beautiful-dnd';
 import { format, isToday } from 'date-fns';
+import { RawDraftContentState } from 'draft-js';
 
 
 type WeekDayProps = {
@@ -22,7 +23,7 @@ const WeekDay = ({tasks, taskCounter, day, updateTasks, updateTaskCounter, updat
     const todaysDate = new Date(day.date);
     const todaysTasks = day.tasks.map(taskId => tasks[taskId]);
 
-    const addTask = (value: string) => {
+    const addTask = (value: RawDraftContentState) => {
         const newTasks = {...tasks};
         newTasks[taskCounter] = { id: taskCounter, content: value };
         updateTasks(newTasks);
@@ -78,7 +79,6 @@ const WeekDay = ({tasks, taskCounter, day, updateTasks, updateTaskCounter, updat
                         {provided.placeholder}
                         <div className="addTask">
                             <EditText
-                                name="addTask"
                                 type="add"
                                 placeholder="Add task..."
                                 handleSubmit={addTask}

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import './DayItem.scss';
+import EditText from './EditText';
 import { Task } from '../types/Task';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Draggable } from 'react-beautiful-dnd';
 import { GripHorizontal, ThreeDots, Trash2, Option } from 'react-bootstrap-icons';
-import EditText from './EditText';
+import { RawDraftContentState } from 'draft-js';
 
 
 type DayItemProps = {
@@ -22,7 +23,7 @@ const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
         else setSelected(false);
     }
 
-    const editTask = (value: string) => {
+    const editTask = (value: RawDraftContentState) => {
         const newTask = {...task};
         newTask.content = value;
         updateTask(newTask);
@@ -48,7 +49,6 @@ const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
                     </div>
                     <div className="taskContent">
                         <EditText
-                            name="editTask"
                             type="edit"
                             start={task.content}
                             handleSubmit={editTask}

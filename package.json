@@ -8,12 +8,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/draft-js": "^0.10.44",
     "@types/node": "^12.12.54",
     "@types/react": "^16.9.49",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-dom": "^16.9.8",
     "bootstrap": "^4.5.2",
     "date-fns": "^2.16.1",
+    "draft-js": "^0.11.7",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",
@@ -21,7 +23,6 @@
     "react-bootstrap-icons": "^1.0.0",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
-    "react-textarea-autosize": "^8.2.0",
     "typescript": "^3.7.5"
   },
   "scripts": {
