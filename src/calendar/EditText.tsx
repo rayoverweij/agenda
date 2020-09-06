@@ -1,6 +1,8 @@
 import React, { useState, FocusEvent, KeyboardEvent } from 'react';
+import { OverlayTrigger, Popover, Button } from 'react-bootstrap';
 import { Editor, EditorState, RawDraftContentState, RichUtils, getDefaultKeyBinding, convertToRaw, convertFromRaw } from 'draft-js';
 import 'draft-js/dist/Draft.css';
+import { TypeBold, TypeItalic, TypeUnderline } from 'react-bootstrap-icons';
 
 
 type EditTextProps = {
@@ -14,7 +16,7 @@ type EditTextProps = {
 const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTextProps) => {
     const [editorState, setEditorState] = useState(
         start === undefined ? () => EditorState.createEmpty() : () => EditorState.createWithContent(convertFromRaw(start)),
-    )
+    );
 
     const submit = () => {
         handleSubmit(convertToRaw(editorState.getCurrentContent()));
@@ -33,6 +35,8 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
                 if(!event.shiftKey) {
                     event.preventDefault();
                     return 'submit-item';
+                } else {
+                    return getDefaultKeyBinding(event);
                 }
             default:
                 return getDefaultKeyBinding(event);
@@ -67,18 +71,66 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
         submit();
     }
 
+    const toggleInlineStyle = (style: string) => {
+        const newState = RichUtils.toggleInlineStyle(editorState, style);
+        setEditorState(newState);
+    }
+
+
+    const editor = (
+        <Editor
+            editorState={editorState}
+            autoComplete="off"
+            spellCheck={false}
+            placeholder={placeholder}
+            onChange={setEditorState}
+            handleKeyCommand={handleKeyCommand}
+            keyBindingFn={customKeyBindingFn}
+            onBlur={onBlur}
+        />
+    );
+
+    const editingControls = (
+        <Popover id="editingControls">
+            <Popover.Content>
+                <Button
+                    variant="light"
+                    onClick={() => { toggleInlineStyle('BOLD') }}
+                >
+                    <TypeBold />
+                </Button>
+                <Button
+                    variant="light"
+                    onClick={() => { toggleInlineStyle('ITALIC') }}
+                >
+                    <TypeItalic />
+                </Button>
+                <Button
+                    variant="light"
+                    onClick={() => { toggleInlineStyle('UNDERLINE') }}
+                >
+                    <TypeUnderline />
+                </Button>
+            </Popover.Content>
+        </Popover>
+    );
+
+    
     return (
         <div className="editText">
-            <Editor
-                editorState={editorState}
-                autoComplete="off"
-                spellCheck={false}
-                placeholder={placeholder}
-                onChange={setEditorState}
-                handleKeyCommand={handleKeyCommand}
-                keyBindingFn={customKeyBindingFn}
-                onBlur={onBlur}
-            />
+            {
+                type === "edit"
+                ?
+                <OverlayTrigger
+                    trigger="focus"
+                    placement="top"
+                    overlay={editingControls}
+                >
+                    {editor}
+                </OverlayTrigger>
+                :
+                editor
+            }
         </div>
     );
 }
