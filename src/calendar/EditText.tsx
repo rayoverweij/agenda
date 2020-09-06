@@ -2,7 +2,7 @@ import React, { useState, FocusEvent, KeyboardEvent } from 'react';
 import { OverlayTrigger, Popover, Button } from 'react-bootstrap';
 import { Editor, EditorState, RawDraftContentState, RichUtils, getDefaultKeyBinding, convertToRaw, convertFromRaw } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { TypeBold, TypeItalic, TypeUnderline } from 'react-bootstrap-icons';
+import { TypeBold, TypeItalic, TypeUnderline, TypeStrikethrough } from 'react-bootstrap-icons';
 
 
 type EditTextProps = {
@@ -76,10 +76,17 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
         setEditorState(newState);
     }
 
+    const styleMap = {
+        'STRIKETHROUGH': {
+            textDecoration: 'line-through'
+        }
+    }
+
 
     const editor = (
         <Editor
             editorState={editorState}
+            customStyleMap={styleMap}
             autoComplete="off"
             spellCheck={false}
             placeholder={placeholder}
@@ -111,11 +118,17 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
                 >
                     <TypeUnderline />
                 </Button>
+                <Button
+                    variant="light"
+                    onClick={ () => { toggleInlineStyle('STRIKETHROUGH') }}
+                >
+                    <TypeStrikethrough />
+                </Button>
             </Popover.Content>
         </Popover>
     );
 
-    
+
     return (
         <div className="editText">
             {
