@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './App.scss';
 import WeekDay from './calendar/WeekDay';
+import MiniCal from './minical/MiniCal';
 import { TaskSet } from './types/Task';
 import { Day, DaySet } from './types/Day';
 import Container from 'react-bootstrap/Container';
@@ -138,7 +139,7 @@ const App = () => {
                 <Row>
                     <Col>
                         <h1>Agenda</h1>
-                        <span className="weekNumber">Week {getWeek(currentDate)}, {thisMonth()}</span>
+                        <span className="weekNumber">Week {getWeek(currentDate, { weekStartsOn: 1 })}, {thisMonth()}</span>
                     </Col>
                 </Row>
             </header>
@@ -151,6 +152,10 @@ const App = () => {
                                 <ArrowDownCircle className="weekChevron" onClick={today} />
                                 <ArrowRightCircle className="weekChevron" onClick={nextWeek} />
                             </div>
+                            <MiniCal
+                                currentDate={currentDate}
+                                setCurrentDate={setCurrentDate}
+                            />
                         </Col>
                         {
                             weekDays.map((weekDay, index) => {
