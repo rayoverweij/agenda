@@ -7,6 +7,7 @@
   },
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@types/draft-js": "^0.10.44",
     "@types/node": "^12.12.54",
@@ -16,6 +17,7 @@
     "bootstrap": "^4.5.2",
     "date-fns": "^2.16.1",
     "draft-js": "^0.11.7",
+    "gh-pages": "^3.1.0",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",
@@ -26,6 +28,8 @@
     "typescript": "^3.9.7"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
