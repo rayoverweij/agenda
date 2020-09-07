@@ -136,12 +136,8 @@ const App = () => {
     return (
         <Container fluid>
             <header>
-                <Row>
-                    <Col>
-                        <h1>Agenda</h1>
-                        <span className="weekNumber">Week {getWeek(currentDate, { weekStartsOn: 1 })}, {thisMonth()}</span>
-                    </Col>
-                </Row>
+                <h1>Agenda</h1>
+                <span className="weekNumber">Week {getWeek(currentDate, { weekStartsOn: 1 })}, {thisMonth()}</span>
             </header>
             <main>
                 <Row className="daysOfWeek">
@@ -152,10 +148,12 @@ const App = () => {
                                 <ArrowDownCircle className="weekChevron" onClick={today} />
                                 <ArrowRightCircle className="weekChevron" onClick={nextWeek} />
                             </div>
-                            <MiniCal
-                                currentDate={currentDate}
-                                setCurrentDate={setCurrentDate}
-                            />
+                            <div>
+                                <MiniCal
+                                    currentDate={currentDate}
+                                    setCurrentDate={setCurrentDate}
+                                />
+                            </div>
                         </Col>
                         {
                             weekDays.map((weekDay, index) => {

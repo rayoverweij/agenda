@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './MiniCal.scss';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { format, startOfMonth, startOfWeek, addDays, isToday, isSameDay, subMonths, addMonths, isSameMonth } from 'date-fns';
 import { ArrowUpShort, ArrowDownShort } from 'react-bootstrap-icons';
 
@@ -27,33 +27,37 @@ const MiniCal = ({currentDate, setCurrentDate}: MiniCalProps) => {
     const nextMonth = () => { setSelectedDate(addMonths(selectedDate, 1)); }
 
     return (
-        <div className="miniCal">
-            <div className="miniCalHeader">
-                <div>
-                    {format(selectedDate, 'MMMM')}
-                </div>
-                <div>
-                    <Button
-                        variant="light"
-                        onClick={prevMonth}
-                    >
-                        <ArrowUpShort />
-                    </Button>
-                    <Button
-                        variant="light"
-                        onClick={nextMonth}
-                    >
-                        <ArrowDownShort />
-                    </Button>
-                </div>
-            </div>
-            <div className="miniCalBody">
+        <table className="miniCal">
+            <thead>
+                <tr>
+                    <th colSpan={5}>
+                        {format(selectedDate, 'MMMM')}
+                    </th>
+                    <th className="monthNav">
+                        <Button
+                            variant="light"
+                            onClick={prevMonth}
+                        >
+                            <ArrowUpShort />
+                        </Button>
+                    </th>
+                    <th className="monthNav">
+                        <Button
+                            variant="light"
+                            onClick={nextMonth}
+                        >
+                            <ArrowDownShort />
+                        </Button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
                 {[0, 1, 2, 3, 4, 5].map(no => {
                     return (
-                        <Row key={`miniCal-row-${no}`}>
+                        <tr key={`miniCal-row-${no}`}>
                             {displayedDays.slice(no * 7, (no + 1) * 7).map((day, index) => {
                                 return (
-                                    <Col key={`miniCal-row-${no}-day-${index}`}>
+                                    <td key={`miniCal-row-${no}-day-${index}`}>
                                         <Button
                                             variant="light"
                                             className={`
@@ -65,14 +69,14 @@ const MiniCal = ({currentDate, setCurrentDate}: MiniCalProps) => {
                                         >
                                             {format(day, 'd')}
                                         </Button>
-                                    </Col>
+                                    </td>
                                 );
                             })}
-                        </Row>
+                        </tr>
                     );
                 })}
-            </div>
-        </div>
+            </tbody>
+        </table>
     );
 }
 

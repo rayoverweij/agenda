@@ -1,6 +1,10 @@
+.container-fluid {
+    padding: 0;
+}
+
 header {
     height: 3rem;
-    border-bottom: 1px solid var(--red);
+    padding: 0 15px;
     
     h1 {
         display: inline-block;
@@ -16,6 +20,15 @@ header {
 
 main {
     height: calc(100vh - 3rem);
+    overflow-x: auto;
+}
+
+.daysOfWeek {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    height: 100%;
+    margin: 0 15px;
+    border-top: 1px solid var(--red);
 }
 
 #toolCol {
@@ -26,20 +39,11 @@ main {
     padding: 0;
 }
 
-.weekNav {
-    padding-left: 10px;
-}
-
 .weekChevron {
-    margin-left: 5px;
-    margin-bottom: 5px;
+    margin-right: 5px;
 
     &:hover {
         cursor: pointer;
         fill: var(--red);
     }
-}
-
-.daysOfWeek {
-    height: 100%;
 }
