@@ -12,7 +12,7 @@ type DayItemProps = {
     task: Task,
     index: number,
     updateTask: (task: Task) => void,
-    deleteTask: (id: number) => void
+    deleteTask: (id: string) => void
 }
 
 const DayItem = ({task, index, updateTask, deleteTask}: DayItemProps) => {
