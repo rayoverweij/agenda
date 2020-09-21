@@ -2,7 +2,7 @@ import React, { useState, FocusEvent, KeyboardEvent } from 'react';
 import { OverlayTrigger, Popover, Button } from 'react-bootstrap';
 import { Editor, EditorState, RawDraftContentState, RichUtils, getDefaultKeyBinding, convertToRaw, convertFromRaw, ContentBlock } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { TypeBold, TypeItalic, TypeUnderline, TypeStrikethrough, Code, ListUl } from 'react-bootstrap-icons';
+import { TypeBold, TypeItalic, TypeUnderline, TypeStrikethrough, Code, ListUl, TypeH3 } from 'react-bootstrap-icons';
 
 
 type EditTextProps = {
@@ -96,8 +96,8 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
         const type = contentBlock.getType();
         
         switch(type) {
-            case 'UNORDERED-LIST':
-                return 'unorderedList';
+            case 'header-3':
+                return 'header3';
             default:
                 return '';
         }
@@ -154,9 +154,15 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
                 </Button>
                 <Button
                     variant="light"
-                    onClick={ () => { toggleBlockType('unordered-list-item') } }
+                    onClick={ () => { toggleBlockType('unordered-list-item') }}
                 >
                     <ListUl />
+                </Button>
+                <Button
+                    variant="light"
+                    onClick = { () => { toggleBlockType('header-3') }}
+                >
+                    <TypeH3 />
                 </Button>
             </Popover.Content>
         </Popover>
@@ -170,7 +176,7 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
                 ?
                 <OverlayTrigger
                     trigger="focus"
-                    placement="top"
+                    placement="left-start"
                     overlay={editingControls}
                 >
                     {editor}
