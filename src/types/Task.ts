@@ -1,11 +1,8 @@
 import { RawDraftContentState } from "draft-js"
 
 export type Task = {
-    id: number,
+    id: string,
+    date: string,
     content: RawDraftContentState,
     highlight: boolean
-}
-
-export type TaskSet = {
-    [key: number]: Task
 }
