@@ -6,32 +6,23 @@ import { TypeBold, TypeItalic, TypeUnderline, TypeStrikethrough, Code } from 're
 
 
 type EditTextProps = {
-    type: "add" | "edit",
-    start?: RawDraftContentState,
+    start: RawDraftContentState,
     placeholder?: string,
-    handleSubmit: (value: RawDraftContentState) => void,
-    handleDelete?: () => void
+    handleSubmit: (value: RawDraftContentState) => void
 }
 
-const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTextProps) => {
+const EditText = ({start, placeholder, handleSubmit}: EditTextProps) => {
     const [editorState, setEditorState] = useState(
-        start === undefined ? () => EditorState.createEmpty() : () => EditorState.createWithContent(convertFromRaw(start)),
+        () => EditorState.createWithContent(convertFromRaw(start)),
     );
 
     const submit = () => {
         handleSubmit(convertToRaw(editorState.getCurrentContent()));
-        if(type === "add") setEditorState(EditorState.createEmpty());
     }
 
     const customKeyBindingFn = (event: KeyboardEvent) => {
-        switch(event.which) {
-            case 8:
-                if(!editorState.getCurrentContent().hasText() && handleDelete !== undefined) {
-                    return 'delete-item';
-                } else {
-                    return getDefaultKeyBinding(event);
-                }
-            case 13:
+        switch(event.key) {
+            case 'Enter':
                 if(!event.shiftKey) {
                     event.preventDefault();
                     return 'submit-item';
@@ -44,14 +35,9 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
     }
 
     const handleKeyCommand = (command: string, editorState: EditorState) => {
-        if(command === "delete-item") {
-            handleDelete!();
-            return 'handled';
-        }
-        
         if(command === "submit-item") {
             submit();
-            if(type === "edit") (document.activeElement! as HTMLDivElement).blur();
+            (document.activeElement! as HTMLDivElement).blur();
             return 'handled';
         }
 
@@ -67,7 +53,6 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
 
     const onBlur = (event: FocusEvent) => {
         event.preventDefault();
-        if(type === "add" && !editorState.getCurrentContent().hasText()) return;
         submit();
     }
 
@@ -142,19 +127,13 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
 
     return (
         <div className="editText">
-            {
-                type === "edit"
-                ?
-                <OverlayTrigger
-                    trigger="focus"
-                    placement="top"
-                    overlay={editingControls}
-                >
-                    {editor}
-                </OverlayTrigger>
-                :
-                editor
-            }
+            <OverlayTrigger
+                trigger="focus"
+                placement="top"
+                overlay={editingControls}
+            >
+                {editor}
+            </OverlayTrigger>
         </div>
     );
 }

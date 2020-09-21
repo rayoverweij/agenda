@@ -18,15 +18,11 @@
     font-weight: bold;
 }
 
-.dropContainer {
+.dayContent {
     flex-grow: 1;
     font-size: 0.8rem;
     padding-top: 40px;
     margin-top: -40px;
-
-    &.isDraggingOver {
-        background-color: #F7F7F7;
-    }
 
     .addTask {
         margin-left: 15px;
@@ -40,5 +36,22 @@
 
     &:hover .addTask {
         display: block;
+    }
+}
+
+.popover {
+    border: none;
+    box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
+
+    .arrow {
+        visibility: hidden;
+    }
+
+    .popover-body {
+        padding: 0;
+    }
+
+    .btn {
+        padding: 0 6px 4px;
     }
 }

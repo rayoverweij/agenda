@@ -1,5 +1,8 @@
+import { RawDraftContentState } from "draft-js"
+
 export type Day = {
-    date: string
+    date: string,
+    content: RawDraftContentState
 }
 
 export type DaySet = {
