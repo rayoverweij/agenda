@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './App.scss';
 import WeekDay from './calendar/WeekDay';
 import MiniCal from './minical/MiniCal';
+import { TaskSet } from './types/Task';
+import { Day, DaySet } from './types/Day';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,8 +13,48 @@ import { format, getWeek, getMonth, getYear, startOfWeek, addDays, addWeeks, sub
 
 
 const App = () => {
+    // Initialize local storage
+    if(localStorage.getItem("tasks") === null) {
+        localStorage.setItem("tasks", JSON.stringify({}));
+    }
+
+    if(localStorage.getItem("taskCounter") === null) {
+        localStorage.setItem("taskCounter", JSON.stringify(0));
+    }
+
+    if(localStorage.getItem("days") === null) {
+        localStorage.setItem("days", JSON.stringify({}));
+    }
+
+
     // Initialize state
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem("tasks")!) as TaskSet);
+    const [taskCounter, setTaskCounter] = useState(JSON.parse(localStorage.getItem("taskCounter")!));
+    const [days, setDays] = useState(JSON.parse(localStorage.getItem("days")!) as DaySet);
+
+
+    // Update storage
+    const updateTasks = (newTasks: TaskSet) => {
+        setTasks(newTasks);
+        localStorage.setItem("tasks", JSON.stringify(newTasks));
+    }
+
+    const updateTaskCounter = (newCounter: number) => {
+        setTaskCounter(newCounter);
+        localStorage.setItem("taskCounter", JSON.stringify(newCounter));
+    }
+
+    const updateDays = (newDays: DaySet) => {
+        setDays(newDays);
+        localStorage.setItem("days", JSON.stringify(newDays));
+    }
+
+    const updateDay = (newDay: Day) => {
+        const newDays = {...days};
+        newDays[newDay.date] = newDay;
+        updateDays(newDays);
+    }
 
 
     // Information based on current state
@@ -21,6 +63,13 @@ const App = () => {
     const weekDays: Date[] = [];
     for(let i = 0; i < 7; i++) {
         weekDays.push(addDays(weekStart, i));
+
+        const currDay = format(weekDays[i], 'yyyy-MM-dd');
+        if(!days.hasOwnProperty(currDay)) {
+            const newDays = {...days};
+            newDays[currDay] = {date: currDay, tasks: []};
+            setDays(newDays);
+        }
     }
 
     const thisMonth = () => {
@@ -46,40 +95,40 @@ const App = () => {
 
     // Drag and drop tasks
     const onDragEnd = (result: DropResult) => {
-        // const { destination, source, draggableId } = result;
+        const { destination, source, draggableId } = result;
 
-        // if(!destination) return;
+        if(!destination) return;
 
-        // if(destination.droppableId === source.droppableId && destination.index === source.index) {
-        //     return;
-        // }
+        if(destination.droppableId === source.droppableId && destination.index === source.index) {
+            return;
+        }
 
-        // const start = source.droppableId;
-        // const finish = destination.droppableId;
+        const start = days[source.droppableId]!;
+        const finish = days[destination.droppableId]!;
 
-        // if(start === finish) {
-        //     const newTaskList = [...JSON.parse(start.tasks)];
-        //     newTaskList.splice(source.index, 1);
-        //     newTaskList.splice(destination.index, 0, draggableId);
+        if(start === finish) {
+            const newTaskList = [...start.tasks];
+            newTaskList.splice(source.index, 1);
+            newTaskList.splice(destination.index, 0, Number(draggableId));
 
-        //     const newDay = {...finish, tasks: JSON.stringify(newTaskList)};
-        //     database.ref('days/' + finish.date).update(newDay);
+            const newDay = {...finish, tasks: newTaskList};
+            updateDay(newDay);
             
-        // } else {
-        //     const newStartTaskList = [...JSON.parse(start.tasks)];
-        //     newStartTaskList.splice(source.index, 1);
-        //     const newStart = {...start, tasks: JSON.stringify(newStartTaskList)};
+        } else {
+            const newStartTaskList = [...start.tasks];
+            newStartTaskList.splice(source.index, 1);
+            const newStart = {...start, tasks: newStartTaskList};
     
-        //     const newFinishTaskList = [...JSON.parse(finish.tasks)];
-        //     newFinishTaskList.splice(destination.index, 0, draggableId);
-        //     const newFinish = {...finish, tasks: JSON.stringify(newFinishTaskList)};
-
-        //     const updates = {} as DaySet
-        //     updates['/days/' + newStart.date] = newStart;
-        //     updates['/days/' + newFinish.date] = newFinish;
+            const newFinishTaskList = [...finish.tasks];
+            newFinishTaskList.splice(destination.index, 0, Number(draggableId));
+            const newFinish = {...finish, tasks: newFinishTaskList};
     
-        //     database.ref().update(updates);
-        // }
+            const newDays = {...days};
+            newDays[newStart.date] = newStart;
+            newDays[newFinish.date] = newFinish;
+            
+            updateDays(newDays);
+        }
     }
 
 
@@ -109,11 +158,17 @@ const App = () => {
                         {
                             weekDays.map((weekDay, index) => {
                                 const weekDayString = format(weekDay, 'yyyy-MM-dd');
+                                const day = days[weekDayString];
 
                                 return (
                                     <WeekDay
                                         key={`weekDay-${index}`}
-                                        date={weekDayString}
+                                        tasks={tasks}
+                                        taskCounter={taskCounter}
+                                        day={day}
+                                        updateTasks={updateTasks}
+                                        updateTaskCounter={updateTaskCounter}
+                                        updateDay={updateDay}
                                     />
                                 )
                             })

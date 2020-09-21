@@ -1,5 +1,6 @@
 export type Day = {
-    date: string
+    date: string,
+    tasks: number[]
 }
 
 export type DaySet = {
