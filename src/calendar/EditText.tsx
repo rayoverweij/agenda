@@ -2,7 +2,7 @@ import React, { useState, FocusEvent, KeyboardEvent } from 'react';
 import { OverlayTrigger, Popover, Button } from 'react-bootstrap';
 import { Editor, EditorState, RawDraftContentState, RichUtils, getDefaultKeyBinding, convertToRaw, convertFromRaw, ContentBlock } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { TypeBold, TypeItalic, TypeUnderline, TypeStrikethrough, Code, ListUl, TypeH3 } from 'react-bootstrap-icons';
+import { TypeBold, TypeItalic, TypeUnderline, TypeStrikethrough, Code, Star, ListUl, TypeH3 } from 'react-bootstrap-icons';
 
 
 type EditTextProps = {
@@ -89,6 +89,9 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
             fontFamily: 'monospace',
             fontSize: '1rem',
             color: 'var(--pink)'
+        },
+        'HIGHLIGHT': {
+            backgroundColor: 'yellow'
         }
     }
 
@@ -151,6 +154,12 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
                     onClick={ () => { toggleInlineStyle('CODE') }}
                 >
                     <Code />
+                </Button>
+                <Button
+                    variant="light"
+                    onClick = { () => {toggleInlineStyle('HIGHLIGHT')} }
+                >
+                    <Star />
                 </Button>
                 <Button
                     variant="light"
