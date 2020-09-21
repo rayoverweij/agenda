@@ -25,7 +25,6 @@ main {
 
 .daysOfWeek {
     display: inline-flex;
-    min-width: calc(100% - 30px);
     flex-wrap: nowrap;
     height: 100%;
     margin: 0 15px;
