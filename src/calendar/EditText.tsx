@@ -24,14 +24,14 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
     }
 
     const customKeyBindingFn = (event: KeyboardEvent) => {
-        switch(event.which) {
-            case 8:
+        switch(event.key) {
+            case 'Backspace':
                 if(!editorState.getCurrentContent().hasText() && handleDelete !== undefined) {
                     return 'delete-item';
                 } else {
                     return getDefaultKeyBinding(event);
                 }
-            case 13:
+            case 'Enter':
                 if(!event.shiftKey) {
                     event.preventDefault();
                     return 'submit-item';
