@@ -19,6 +19,16 @@ h1 {
 }
 
 
+// Editor block style overrides
+.public-DraftStyleDefault-ol, .public-DraftStyleDefault-ul {
+    margin: 0 !important;
+
+    li {
+        margin-left: 0.75rem !important;
+    }
+}
+
+
 
 $card:  0 1px 6px rgba(0,0,0,0.16), 0 1px 6px rgba(0,0,0,0.23);
 $heavy: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);

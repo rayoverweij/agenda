@@ -1,8 +1,8 @@
 import React, { useState, FocusEvent, KeyboardEvent } from 'react';
 import { OverlayTrigger, Popover, Button } from 'react-bootstrap';
-import { Editor, EditorState, RawDraftContentState, RichUtils, getDefaultKeyBinding, convertToRaw, convertFromRaw } from 'draft-js';
+import { Editor, EditorState, RawDraftContentState, RichUtils, getDefaultKeyBinding, convertToRaw, convertFromRaw, ContentBlock } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { TypeBold, TypeItalic, TypeUnderline, TypeStrikethrough, Code } from 'react-bootstrap-icons';
+import { TypeBold, TypeItalic, TypeUnderline, TypeStrikethrough, Code, ListUl } from 'react-bootstrap-icons';
 
 
 type EditTextProps = {
@@ -32,11 +32,11 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
                     return getDefaultKeyBinding(event);
                 }
             case 'Enter':
-                if(!event.shiftKey) {
+                if(!event.ctrlKey) {
+                    return getDefaultKeyBinding(event);
+                } else {
                     event.preventDefault();
                     return 'submit-item';
-                } else {
-                    return getDefaultKeyBinding(event);
                 }
             default:
                 return getDefaultKeyBinding(event);
@@ -76,6 +76,11 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
         setEditorState(newState);
     }
 
+    const toggleBlockType = (type: string) => {
+        const newState = RichUtils.toggleBlockType(editorState, type);
+        setEditorState(newState);
+    }
+
     const styleMap = {
         'STRIKETHROUGH': {
             textDecoration: 'line-through'
@@ -84,6 +89,17 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
             fontFamily: 'monospace',
             fontSize: '1rem',
             color: 'var(--pink)'
+        }
+    }
+
+    const customBlockStyleFn = (contentBlock: ContentBlock) => {
+        const type = contentBlock.getType();
+        
+        switch(type) {
+            case 'UNORDERED-LIST':
+                return 'unorderedList';
+            default:
+                return '';
         }
     }
 
@@ -98,6 +114,7 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
             onChange={setEditorState}
             handleKeyCommand={handleKeyCommand}
             keyBindingFn={customKeyBindingFn}
+            blockStyleFn={customBlockStyleFn}
             onBlur={onBlur}
         />
     );
@@ -134,6 +151,12 @@ const EditText = ({type, start, placeholder, handleSubmit, handleDelete}: EditTe
                     onClick={ () => { toggleInlineStyle('CODE') }}
                 >
                     <Code />
+                </Button>
+                <Button
+                    variant="light"
+                    onClick={ () => { toggleBlockType('unordered-list-item') } }
+                >
+                    <ListUl />
                 </Button>
             </Popover.Content>
         </Popover>
