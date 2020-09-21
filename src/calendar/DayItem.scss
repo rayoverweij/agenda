@@ -1,5 +1,6 @@
 .dragContainer {
     display: flex;
+    flex-grow: 1;
 
     .dragHandle {
         width: 15px;
@@ -19,10 +20,15 @@
     }
 
     .taskContent {
+        height: 100%;
         flex-grow: 1;
         overflow: hidden;
         overflow-wrap: break-word;
         word-break: break-word;
+
+        .editText {
+            height: 100%;
+        }
     }
 
     .taskMenu {

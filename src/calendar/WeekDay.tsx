@@ -77,13 +77,17 @@ const WeekDay = ({tasks, taskCounter, day, updateTasks, updateTaskCounter, updat
                             );
                         })}
                         {provided.placeholder}
-                        <div className="addTask">
-                            <EditText
-                                type="add"
-                                placeholder="Add task..."
-                                handleSubmit={addTask}
-                            />
-                        </div>
+                        {todaysTasks.length === 0 ?
+                            <div className="addTask">
+                                <EditText
+                                    type="add"
+                                    placeholder=""
+                                    handleSubmit={addTask}
+                                />
+                            </div>
+                        :
+                            <></>
+                        }
                     </div>
                 }
             </Droppable>
